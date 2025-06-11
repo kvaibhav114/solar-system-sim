@@ -1,23 +1,23 @@
-// Setup scene, camera, and renderer
+// Setting up scene
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-// Add camera controls
+// Adding camera controls
 const controls = new THREE.OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 camera.position.set(0, 50, 100);
 controls.update();
 
-// Add lighting
+// Adding light
 scene.add(new THREE.AmbientLight(0x333333));
 const sunLight = new THREE.DirectionalLight(0xffffff, 1);
 sunLight.position.set(5, 3, 5);
 scene.add(sunLight);
 
-// Create stars background
+// Creating starry background
 function createStars() {
     const starsGeometry = new THREE.BufferGeometry();
     const starsMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.1 });
@@ -37,7 +37,7 @@ function createStars() {
 
 createStars();
 
-// Planet data
+// Solar System Data
 const planets = [
     { name: 'Sun', radius: 10, color: 0xffff00, distance: 0, speed: 0, rotationSpeed: 0.01 },
     { name: 'Mercury', radius: 1.5, color: 0xb5b5b5, distance: 20, speed: 0.04, rotationSpeed: 0.004 },
@@ -50,7 +50,7 @@ const planets = [
     { name: 'Neptune', radius: 3.8, color: 0x2980b9, distance: 130, speed: 0.0001, rotationSpeed: 0.032 }
 ];
 
-// Create planets and orbits
+// Creating planets and orbits
 const planetObjects = [];
 
 function createPlanets() {
@@ -64,7 +64,6 @@ function createPlanets() {
             mesh.position.x = planet.distance * Math.cos(angle);
             mesh.position.z = planet.distance * Math.sin(angle);
             
-            // Create orbit path
             const orbitPoints = [];
             for (let i = 0; i <= 64; i++) {
                 const theta = (i / 64) * Math.PI * 2;
@@ -80,7 +79,6 @@ function createPlanets() {
             scene.add(orbit);
         }
         
-        // Add rings to Saturn
         if (planet.hasRings) {
             const ringGeometry = new THREE.RingGeometry(planet.radius * 1.5, planet.radius * 2, 32);
             const ring = new THREE.Mesh(ringGeometry, new THREE.MeshBasicMaterial({ 
@@ -106,7 +104,7 @@ function createPlanets() {
 
 createPlanets();
 
-// Create speed controls
+// Speed Control
 function setupSpeedControls() {
     const container = document.getElementById('speed-controls');
     
@@ -147,7 +145,7 @@ function setupSpeedControls() {
 
 setupSpeedControls();
 
-// Animation control
+//Pause & Reset function
 let isPaused = false;
 const clock = new THREE.Clock();
 
@@ -173,7 +171,6 @@ function animate() {
 
 animate();
 
-// UI controls
 document.getElementById('pause-btn').addEventListener('click', () => {
     isPaused = !isPaused;
     document.getElementById('pause-btn').textContent = isPaused ? 'Resume' : 'Pause';
@@ -184,7 +181,7 @@ document.getElementById('reset-btn').addEventListener('click', () => {
     controls.reset();
 });
 
-// Planet hover info
+// Planet hover
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 
@@ -209,7 +206,7 @@ window.addEventListener('mousemove', (event) => {
     }
 });
 
-// Handle window resize
+// Handling window resize
 window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
